@@ -36,7 +36,7 @@ class DynamicLibraryParser
         }
 
         template<typename F>
-        std::function<F> getFunction(const std::string& function_name)
+        F* getFunction(const std::string& function_name)
         {
             if (m_handle)
             {
