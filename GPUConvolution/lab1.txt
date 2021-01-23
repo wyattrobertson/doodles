@@ -1,0 +1,68 @@
+
+================================================================================
+Question 3: Small-Kernel Convolution (50 points)
+================================================================================
+
+Introduction:
+------------------
+On Friday, we saw that the effect of a linear time-invariant system on an input
+signal x[n] (to produce an output y[n]) can be summarized by the system's
+impulse response h[n]. This is the output of the system in response to a unit
+impulse as input.
+
+We can then find y[n] by computing the convolution, which we denote (*):
+
+	y[n] = (x (*) h)[n]
+
+(See Friday's lecture slides for an expanded definition.)
+
+The goal is to GPU-accelerate this computation. Similar to how we handled the
+addition problem, we allocate and copy memory as appropriate, and we can use the
+strategies in Lecture 2 to divide indicies among our many threads.
+
+
+To do:
+------------------
+Complete the GPU-accelerated convolution by filling in the parts marked TODO in
+blur.cu.
+
+
+Assignment notes:
+------------------
+The code given to you will run the ordinary CPU version of the convolution, and
+compare the GPU/CPU speedup and the correctness of the GPU output. The default
+is currently set to convolve the starting signal with a Gaussian kernel.
+
+There are two output binaries:
+
+	noaudio-blur: Generate the input signal x[n] randomly, with a size
+                      specified in the arguments.
+
+	audio-blur: Read the input signal x[n] from an input audio file, and
+                    write the signal y[n] as an output audio file.
+
+The default 'make all' will make both binaries.
+
+Depending on where you are building the binaries, you may need to change the
+CUDA_PATH variable in the Makefile.
+
+Because convolving with the Gaussian kernel acts as an imperfect low-pass
+filter, the output file (in audio mode) will have its higher frequencies
+attenuated. Try it out!
+
+As of: 4/5/2015
+On haru (haru.caltech.edu), you should get a speedup of ~6-8x, using a
+reasonable choice of block size and #blocks (e.g. 512, 200). 
+
+
+Hints:
+------------------
+- The CPU code exists already (in blur.cpp somewhere in the mess); use it as a
+  guide! Recall that we often accelerate CPU code by replacing it with
+  "similar-looking" GPU code!
+
+
+Technical details:
+------------------
+- For UNIX development: To use audio mode, you'll need to install libsndfile.
+	- On Ubuntu, you can use "sudo apt-get install libsndfile1-dev".
